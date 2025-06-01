@@ -37,7 +37,7 @@ import com.parinexus.presentation.utils.encode
 import com.parinexus.presentation.viewModel.NewsViewModel
 
 @Composable
-fun NewsTest(
+fun NewsNavHost(
     viewModel: NewsViewModel = hiltViewModel()
 ){
 
