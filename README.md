@@ -27,10 +27,7 @@ This README explains how to clone, build, and run the project, and it provides a
 * [Prerequisites](#prerequisites)
 * [Getting Started](#getting-started)
 
-    * [1. Clone the Repository](#1-clone-the-repository)
-    * [2. Configure API Keys & Local Properties](#2-configure-api-keys--local-properties)
-    * [3. Build the Project](#3-build-the-project)
-    * [4. Run on Device or Emulator](#4-run-on-device-or-emulator)
+    * [Clone the Repository](#clone-the-repository)
 * [Module Details](#module-details)
 
     * [app](#app-module-details)
