@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -13,7 +14,7 @@ android {
         minSdk = 24
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "API_KEY", "\"b2c8dc2791054f53ad1a3cacbd13067c\"")
+        buildConfigField("String", "API_KEY", "\"pub_87854116e73724224569c1959fed54920ca70\"")
         buildConfigField("String", "COUNTRY", "\"vi\"")
     }
 

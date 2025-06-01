@@ -11,8 +11,8 @@ interface ApiService {
 
     @GET("api/1/latest")
     suspend fun getArticles(
-        @Query("country") country : String = BuildConfig.API_KEY,
-//        @Query("language") language: String = Constants.Network.COUNTRY,
+        @Query("country") country : String = BuildConfig.COUNTRY,
+        @Query("language") language: String = BuildConfig.COUNTRY,
         @Query("category") category: String,
         @Query("page") pageNumber: String? = null,
         @Query("apikey") apiKey:String = BuildConfig.API_KEY
