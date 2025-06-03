@@ -18,12 +18,6 @@ This README explains how to clone, build, and run the project, and it provides a
 
     * [Clean Architecture Layers](#clean-architecture-layers)
     * [Dependency Injection](#dependency-injection)
-* [Project Structure](#project-structure)
-
-    * [`app/`](#app)
-    * [`data/`](#data)
-    * [`domain/`](#domain)
-    * [`presentation/`](#presentation)
 * [Prerequisites](#prerequisites)
 * [Getting Started](#getting-started)
 
@@ -101,102 +95,6 @@ This README explains how to clone, build, and run the project, and it provides a
         * `DatabaseModule`: Room database and DAO instances.
         * `RepositoryModule`: Binds interface types (`RemoteRepository`, `LocalRepository`, `FavoriteRepository`) to their implementations.
         * `UseCaseModule`: Provides domain‐level use cases.
-
----
-
-## Project Structure
-
-Each top‐level directory corresponds to a Gradle module. Below is an overview of the module tables and key packages.
-
-```
-Root
-├── app/
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/newssample/
-│   │   │   │   ├── di/
-│   │   │   │   │   ├── DatabaseModule.kt
-│   │   │   │   │   ├── NetworkModule.kt
-│   │   │   │   │   ├── RepositoryModule.kt
-│   │   │   │   │   └── UseCaseModule.kt
-│   │   │   │   ├── MainActivity.kt
-│   │   │   │   └── NewsApp.kt
-│   │   │   ├── res/
-│   │   │   │   ├── layout/  (if any XML is used alongside Compose)
-│   │   │   │   └── values/
-│   │   │   └── AndroidManifest.xml
-│   │   └── test/ 
-│   ├── .gitignore
-│   ├── build.gradle.kts
-│   └── proguard-rules.pro
-│
-├── data/
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/data/
-│   │   │   │   ├── constants/       (API endpoints, keys, timeouts)
-│   │   │   │   ├── local/           (Room entities, DAO, shared prefs)
-│   │   │   │   ├── mapper/          (DTO ↔ Domain mappers)
-│   │   │   │   ├── model/           (Data models/DTOs)
-│   │   │   │   ├── remote/          (ApiService interfaces, Retrofit definitions)
-│   │   │   │   │   └── ApiService.kt
-│   │   │   │   └── repository/
-│   │   │   │       ├── LocalRepositoryImpl.kt
-│   │   │   │       └── RemoteRepositoryImpl.kt
-│   │   │   └── AndroidManifest.xml  (usually empty or merged)
-│   │   └── test/
-│   ├── .gitignore
-│   ├── build.gradle.kts
-│   └── proguard-rules.pro
-│
-├── domain/
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/domain/
-│   │   │   │   ├── model/           (Domain models, e.g., `Article.kt`)
-│   │   │   │   ├── repository/      (Repository interfaces)
-│   │   │   │   │   ├── FavoriteRepository.kt
-│   │   │   │   │   ├── LocalRepository.kt
-│   │   │   │   │   └── RemoteRepository.kt
-│   │   │   │   ├── state/           (Resource.kt to wrap loading/success/error)
-│   │   │   │   └── usecase/         (ArticleUseCase.kt, etc.)
-│   │   │   └── AndroidManifest.xml  (empty or merged)
-│   │   └── test/
-│   ├── .gitignore
-│   ├── build.gradle.kts
-│   └── proguard-rules.pro
-│
-├── presentation/
-│   ├── src/
-│   │   ├── androidTest/
-│   │   ├── main/
-│   │   │   ├── java/presentation/
-│   │   │   │   ├── components/     (Composable screens and UI components)
-│   │   │   │   │   ├── FavoriteScreen.kt
-│   │   │   │   │   ├── HomeScreen.kt
-│   │   │   │   │   ├── NewsDetailScreen.kt
-│   │   │   │   │   ├── NewsItem.kt
-│   │   │   │   │   └── SearchScreen.kt
-│   │   │   │   ├── mapper/         (Mapper.kt to convert domain models to UI models)
-│   │   │   │   ├── model/          (UI state/data classes, e.g., `NewsUiModel.kt`, `FavoriteUiModel.kt`)
-│   │   │   │   ├── navigation/     (NavGraph, routes, deep links)
-│   │   │   │   ├── theme/          (Color schemes, typography, shapes, `Theme.kt`)
-│   │   │   │   ├── utils/          (Extension functions, helpers)
-│   │   │   │   └── viewModel/      (ViewModels that expose UI state to composables)
-│   │   │   ├── res/                (Compose uses mostly no XML; may contain drawables, strings, colors)
-│   │   │   └── AndroidManifest.xml
-│   │   └── test/
-│   ├── .gitignore
-│   ├── build.gradle.kts
-│   └── proguard-rules.pro
-│
-├── build.gradle.kts        (root Gradle build script aggregating modules)  
-├── settings.gradle.kts     (includes `:app`, `:data`, `:domain`, `:presentation`)  
-├── gradle.properties       (project-wide Gradle properties)  
-├── gradlew                  (Unix Gradle wrapper)  
-├── gradlew.bat             (Windows Gradle wrapper)  
-└── local.properties        (contains local secrets, e.g., API keys)  
-```
 
 ---
 
