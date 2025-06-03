@@ -1,24 +1,27 @@
 package com.parinexus.presentation.viewModel
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.parinexus.domain.ArticleUseCase
-import com.parinexus.domain.model.DomainResultApi
 import com.parinexus.domain.state.Resource
+import com.parinexus.domain.usecase.ArticleUseCase
+import com.parinexus.domain.usecase.FavoriteCategoryUseCase
 import com.parinexus.presentation.mapper.toPresentation
 import com.parinexus.presentation.model.Article
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NewsViewModel @Inject constructor(
     private val articleUseCase: ArticleUseCase,
+    private val favoriteCategoryUseCase: FavoriteCategoryUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val nextPageMap = mutableMapOf<String, String?>()
@@ -28,39 +31,47 @@ class NewsViewModel @Inject constructor(
     private val _articles = MutableStateFlow<Resource<List<Article>>>(Resource.Loading)
     val articles: StateFlow<Resource<List<Article>>> = _articles.asStateFlow()
 
-    private val _favoriteIds = MutableStateFlow<Set<String>>(emptySet())
-    val favoriteIds: StateFlow<Set<String>> = _favoriteIds
+    val favoriteCategoriesFlow = favoriteCategoryUseCase.favorites
 
-    fun getArticles(category: String) {
-        if (articleMap[category]?.isNotEmpty() == true && isLastPageMap[category] == true) {
-            _articles.value = Resource.Success(articleMap[category] ?: emptyList())
-            return
-        }
+    private val _selectedCategory = mutableStateOf(savedStateHandle["selectedCategory"] ?: "Sports")
+    val selectedCategory: State<String> = _selectedCategory
+
+    private fun setSelectedCategory(category: String) {
+        _selectedCategory.value = category
+        loadArticlesForSelectedCategory()
+    }
+
+    fun loadArticlesForSelectedCategory() {
+        val category = selectedCategory.value
 
         viewModelScope.launch {
+            if (articleMap[category]?.isNotEmpty() == true && isLastPageMap[category] == true) {
+                _articles.value = Resource.Success(articleMap[category] ?: emptyList())
+                return@launch
+            }
+
             val nextPage = nextPageMap[category]
-            val currentArticles = articleMap[category] ?: mutableListOf()
+            val currentArticles = articleMap[category]?.toMutableList() ?: mutableListOf()
 
             _articles.value = Resource.Loading
 
-            articleUseCase.getArticles(category, nextPage).collect { rs:Resource<DomainResultApi> ->
-                when (rs) {
+            articleUseCase.getArticles(category, nextPage).collect { result ->
+                when (result) {
                     is Resource.Loading -> Unit
                     is Resource.Success -> {
-                        val presentation = rs.data.toPresentation()
+                        val presentation = result.data.toPresentation()
                         val newArticles = presentation.results
-                        val updatedList = currentArticles.toMutableList().apply {
-                            addAll(newArticles)
-                        }
+                        currentArticles += newArticles
 
-                        articleMap[category] = updatedList
+                        articleMap[category] = currentArticles
                         nextPageMap[category] = presentation.nextPage
                         isLastPageMap[category] = newArticles.isEmpty()
 
-                        _articles.value = Resource.Success(updatedList)
+                        _articles.value = Resource.Success(currentArticles)
                     }
+
                     is Resource.Failed -> {
-                        _articles.value = Resource.Failed(rs.message)
+                        _articles.value = Resource.Failed("Failed to fetch articles for $category")
                     }
                 }
             }
@@ -71,10 +82,6 @@ class NewsViewModel @Inject constructor(
         nextPageMap.remove(category)
         articleMap.remove(category)
         isLastPageMap.remove(category)
-        getArticles(category)
-    }
-
-    fun getCurrentData(category: String): List<Article> {
-        return articleMap[category] ?: emptyList()
+        setSelectedCategory(category)
     }
 }
