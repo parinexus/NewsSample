@@ -1,4 +1,4 @@
-package com.parinexus.domain
+package com.parinexus.domain.usecase
 
 import com.parinexus.domain.model.DomainResultApi
 import com.parinexus.domain.repository.LocalRepository
