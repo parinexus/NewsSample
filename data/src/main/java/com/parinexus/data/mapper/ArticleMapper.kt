@@ -4,6 +4,7 @@ import com.parinexus.data.model.DataArticle
 import com.parinexus.domain.model.DomainArticle
 
 fun DataArticle.toDomain(): DomainArticle = DomainArticle(
+    id = id,
     articleId = articleId,
     title = title,
     link = link,
@@ -19,6 +20,7 @@ fun DataArticle.toDomain(): DomainArticle = DomainArticle(
 )
 
 fun DomainArticle.toData(): DataArticle = DataArticle(
+    id = id,
     articleId = articleId,
     title = title,
     link = link,

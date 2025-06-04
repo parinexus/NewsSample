@@ -1,17 +1,18 @@
 package com.parinexus.data
 
+import com.parinexus.data.mapper.toData
+import com.parinexus.data.mapper.toDomain
+import com.parinexus.data.model.DataArticle
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
-import org.junit.Assert.*
-
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
 class ExampleUnitTest {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun dataArticle_mapsToDomainAndBack_preservesId() {
+        val original = DataArticle(id = 1, articleId = "a1")
+
+        val mappedBack = original.toDomain().toData()
+
+        assertEquals("ID should be preserved after mapping", original.id, mappedBack.id)
     }
 }
